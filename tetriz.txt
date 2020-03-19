@@ -1,0 +1,296 @@
+#include<iostream>
+#include<conio.h>
+#include <string>
+#include<ctime>
+using namespace std;
+void movement();
+//int removeblock(int ,int);
+void make();
+bool constraints(int ,int);
+void spawn();
+void block(int);
+void over();
+bool gameover = false;
+void sleep()
+{
+	for (int i = 0;i < 100000000;i++);
+}
+char blo[7][4][4] =
+{
+	{
+		{ 0, 'X', 0, 0 },
+		{ 0, 'X', 0, 0 },
+		{ 0, 'X', 0, 0 },
+		{ 0, 'X', 0, 0 }
+	},
+	{
+		{ 0, 0, 0, 0 },
+		{ 0, 'X','X',0 },
+		{ 0, 'X', 0, 0 },
+		{ 0, 'X', 0, 0 }
+	},
+	{
+		{ 0, 0, 'X', 0 },
+		{ 0, 'X', 'X', 0 },
+		{ 0, 'X', 0, 0 },
+		{ 0, 0, 0, 0 }
+	},
+	{
+		{ 0, 'X', 0, 0 },
+		{ 0, 'X', 'X', 0 },
+		{ 0, 0, 'X', 0 },
+		{ 0, 0, 0, 0 }
+	},
+	{
+		{ 0, 0, 0, 0 },
+		{ 0, 'X', 0, 0 },
+		{ 'X', 'X', 'X', 0 },
+		{ 0, 0, 0, 0 }
+	},
+	{
+		{ 0, 0, 0, 0 },
+		{ 0, 'X', 'X', 0 },
+		{ 0, 'X', 'X', 0 },
+		{ 0, 0, 0, 0 }
+	},
+	{
+		{ 0, 0, 0, 0 },
+		{ 0, 'X', 'X', 0 },
+		{ 0, 0, 'X', 0 },
+		{ 0, 0, 'X', 0 }
+	}
+};
+
+int random()
+{
+	int s;
+	srand(time(NULL));
+	s = rand() % 7;
+	return(s);
+}
+
+/*void display()
+{
+	int i,j,s=0;
+	s = random();
+	block();
+	for (i = 0;i < 2;i++)
+	{
+		for (j = 0;j < 4;j++)
+		{
+			cout << blo[s][i][j];
+		}
+	}
+	
+}*/
+char a[22][19];
+void display()
+{
+	int i, j;
+
+	for (i = 0;i < 22;i++)
+	{
+		a[i][0] = '#';
+	}
+
+	for (j = 1;j < 19;j++)
+	{
+		a[21][j] = '#';
+	}
+
+	for (i = 0;i < 21;i++)
+	{
+		a[i][18] = '#';
+	}
+
+
+}
+void make()
+{
+	int i, j;
+	for (i = 0;i < 22;i++)
+	{
+		cout << "\n";
+		for (j = 0;j < 19;j++)
+		{
+			cout << a[i][j];
+		}
+	}
+	if (gameover)
+	{
+		system("CLS");
+		over();
+	}
+
+}
+
+int p = 4, c = 0;
+int s = random();
+char blocks[4][4] = {};
+void block(int m)
+{
+	int i, j;
+	for (i = 0;i < 4;i++)
+	{
+		for (j = 0;j < 4;j++)
+		{
+			blocks[i][j] = 0;
+			blocks[i][j] = blo[m][i][j];
+		}
+	}
+
+	
+}
+void over()
+{
+	cout << "\n\t\t\t\***********************WELCOME TO TETRIS GAME*************************";
+}
+void game(int y,int k)
+{
+int i,j;
+c= k;
+p = y;
+block(s);
+for (i = 0;i < 4;i++)
+
+{
+	for (j = 0;j < 4;j++)
+
+	{
+		a[i + k][j + y] += blocks[i][j];
+
+	}
+
+
+}
+make();
+
+for (i = 0;i < 4;i++)
+{
+	for (j = 0;j < 4;j++)
+	{
+		a[i + k][j + y] -= blocks[i][j];
+	}
+}
+			 
+
+		    //removeblock(y,k);
+            display();
+			sleep();
+			system("CLS");
+	
+			
+}
+/*int removeblock(int z,int x)
+{
+	int i, j;
+	for (i = 0;i < 4;i++)
+	{
+		for (j = 0;j < 4;j++)
+		{
+			a[i + x][j + z]-= blo[s][i][j];
+		}
+	}
+	return(0);
+}*/
+void movement()
+{
+	char ch;
+			ch = _getch();
+			switch (ch)
+			{
+
+			case 'd':if (!constraints(p+1, c))
+			{
+				game(p+1, c);
+
+			}
+					break;
+
+			case 'a':if (!constraints(p-1, c))
+			{
+				game(p-1, c);
+
+			}
+					break;
+					
+			}
+			spawn();
+
+}
+void loop()
+{
+	while (!gameover)
+	{
+	
+			movement();
+		
+	}
+}
+
+bool constraints(int x2, int y2)
+{
+	int i, j;
+	for ( i = 0; i < 4; i++)
+	{
+		for (j = 0; j < 4; j++)
+		{
+			if ((blocks[i][j] && a[y2 + i][x2 + j]) != 0)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+void spawn()
+{
+	if (!constraints(p, c+1))
+	{
+		game(p, c+1);
+	}
+	else
+	{
+		for (int i = 0;i < 4;i++)
+
+		{
+			for (int j = 0;j < 4;j++)
+
+			{
+				a[i + c][j + p] += blocks[i][j];
+
+			}
+
+
+		}
+		s= random();
+		block(s);
+		game(4,0);
+
+	}
+}
+
+int main()
+{
+		
+	int ch;
+	cout << "\n\t\t\t\***********************WELCOME TO TETRIS GAME*************************";
+	cout << "\n1 Play";
+	cout << "\n2 Quit";
+	cout << "\nEnter choice:";
+	cin >> ch;
+
+	if (ch == 1)
+	{
+		system("cls");
+		//display();
+		loop();
+			
+	}
+
+	else
+	{
+		exit;
+	}
+	return 0;
+}
