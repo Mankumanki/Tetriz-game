@@ -13,8 +13,9 @@ void over();
 bool gameover = false;
 void sleep()
 {
-	for (int i = 0;i < 100000000;i++);
+	for (long double i = 0;i < 100000000;i++);
 }
+
 char blo[7][4][4] =
 {
 	{
@@ -95,14 +96,13 @@ void display()
 
 	for (j = 1;j < 19;j++)
 	{
-		a[21][j] = '#';
+	    a[21][j] = '#';
 	}
 
 	for (i = 0;i < 21;i++)
 	{
-		a[i][18] = '#';
+	   a[i][18] = '#';
 	}
-
 
 }
 void make()
@@ -137,49 +137,61 @@ void block(int m)
 			blocks[i][j] = 0;
 			blocks[i][j] = blo[m][i][j];
 		}
-	}
 
+	}
 	
 }
 void over()
 {
-	cout << "\n\t\t\t\***********************WELCOME TO TETRIS GAME*************************";
+	
+	cout << "\n\t\t\t\***********************GAME-OVER*************************";
+	cout << "\nPress any key to exit";
+	char ch;
+	ch = _getch();
+	if (ch)
+	{
+		exit;
+	}
+	
 }
+
 void game(int y,int k)
 {
 int i,j;
 c= k;
 p = y;
 block(s);
-for (i = 0;i < 4;i++)
 
-{
-	for (j = 0;j < 4;j++)
+	for (i = 0;i < 4;i++)
 
 	{
-		a[i + k][j + y] += blocks[i][j];
+		for (j = 0;j < 4;j++)
 
+		{
+			a[i + k][j + y] += blocks[i][j];
+
+		}
+
+
+	}
+	make();
+
+	for (i = 0;i < 4;i++)
+	{
+		for (j = 0;j < 4;j++)
+		{
+			a[i + k][j + y] -= blocks[i][j];
+		}
 	}
 
 
-}
-make();
-
-for (i = 0;i < 4;i++)
-{
-	for (j = 0;j < 4;j++)
-	{
-		a[i + k][j + y] -= blocks[i][j];
-	}
-}
-			 
-
-		    //removeblock(y,k);
-            display();
-			sleep();
-			system("CLS");
+	//removeblock(y,k);
+		display();
 	
-			
+	sleep();
+	system("CLS");
+
+
 }
 /*int removeblock(int z,int x)
 {
@@ -195,37 +207,41 @@ for (i = 0;i < 4;i++)
 }*/
 void movement()
 {
-	char ch;
-			ch = _getch();
-			switch (ch)
-			{
+	if (_kbhit())
+	{
+		char ch;
+		ch = _getch();
+		switch (ch)
+		{
 
-			case 'd':if (!constraints(p+1, c))
-			{
-				game(p+1, c);
+		case 'd':if (!constraints(p + 1, c))
+		{
+			game(p + 1, c);
 
-			}
-					break;
+		}
+				break;
 
-			case 'a':if (!constraints(p-1, c))
-			{
-				game(p-1, c);
+		case 'a':if (!constraints(p - 1, c))
+		{
+			game(p - 1, c);
 
-			}
-					break;
-					
-			}
-			spawn();
+		}
+				break;
 
+		}
+	}
+		spawn();
+	
+		
 }
 void loop()
 {
 	while (!gameover)
 	{
-	
 			movement();
 		
 	}
+
 }
 
 bool constraints(int x2, int y2)
@@ -251,10 +267,12 @@ void spawn()
 	}
 	else
 	{
-		for (int i = 0;i < 4;i++)
+		int i, j;
+
+		for (i = 0;i < 4;i++)
 
 		{
-			for (int j = 0;j < 4;j++)
+			for ( j = 0;j < 4;j++)
 
 			{
 				a[i + c][j + p] += blocks[i][j];
@@ -262,6 +280,10 @@ void spawn()
 			}
 
 
+		}
+		if (c==0)
+		{
+			gameover = true;
 		}
 		s= random();
 		block(s);
